@@ -1,0 +1,51 @@
+﻿@using Newtonsoft.Json
+@model ChatHistoryBot.Areas.WebChat.Models.BotModel
+@{
+    ViewBag.Title = "Token Bot";
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    @*    <link href="https://unpkg.com/botframework-webchat/botchat.css" rel="stylesheet" />*@
+    <link href="~/areas/WebChat/botchat.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    @*    <script src="https://unpkg.com/botframework-webchat/botchat.js"></script>*@
+    <script type="text/javascript" src="~/areas/WebChat/botchat.js"></script>
+
+
+</head>
+<body>
+    <div> 
+        <div id="bot" style="max-width:300px;margin-top:80px;min-height:500px;" />
+        <button onclick="postButtonMessage()" style="width:120px;height:60px;padding:20px;margin-left:80px;margin-top:20px;">Click Me!</button>
+    </div>
+</body>
+  
+<script>
+    var model = @Html.Raw(JsonConvert.SerializeObject(Model, new JsonSerializerSettings {Converters = { new Newtonsoft.Json.Converters.JavaScriptDateTimeConverter() } }));
+</script> 
+ 
+
+<script>
+        var botConnection = new BotChat.DirectLine({
+            token: model.token
+        });
+
+          BotChat.App({
+            directLine: { secret: model.token },
+            user: { id: model.uniqueUserId, name: "Unknown" },
+            botConnection: botConnection,
+            bot: { id: '@System.Configuration.ConfigurationManager.AppSettings["BotId"]' },
+            resize: 'detect',
+            history: model.history
+          }, document.getElementById("bot"));
+</script>
+</html>

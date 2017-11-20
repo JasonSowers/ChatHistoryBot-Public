@@ -73,7 +73,7 @@ namespace ChatHistoryBot.Areas.WebChat.Models
                 return _history;
             }
 
-            set => _history = value;
+            set { _history = value; }
         }
     }
 }
